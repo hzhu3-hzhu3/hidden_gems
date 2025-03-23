@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index'
+  end
+  
   get "cart/show"
   resources :categories
   resources :products

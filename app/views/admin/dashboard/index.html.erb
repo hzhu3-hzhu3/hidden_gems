@@ -1,0 +1,7 @@
+<h1>Admin Dashboard</h1>
+<p>Welcome, <%= current_user.username %>! You are an admin!</p>
+
+<nav>
+  <%= link_to "Manage Products", products_path %> |
+  <%= link_to "Manage Categories", categories_path %>
+</nav>
