@@ -1,2 +1,16 @@
-<h1>Cart#show</h1>
-<p>Find me in app/views/cart/show.html.erb</p>
+<h1>Your Cart</h1>
+
+<% @items.each do |item| %>
+  <div>
+    <strong><%= item[:product].name %></strong> - Qty: <%= item[:quantity] %>
+
+    <%= form_with url: update_cart_item_path(item[:product].id), method: :patch do |f| %>
+      <%= f.number_field :quantity, value: item[:quantity], min: 0 %>
+      <%= f.submit "Update Quantity" %>
+    <% end %>
+
+    <%= button_to "Remove", remove_cart_item_path(item[:product].id), method: :delete %>
+  </div>
+<% end %>
+
+<%= link_to "Continue Shopping", products_path %>
