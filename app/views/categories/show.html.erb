@@ -8,3 +8,11 @@
 
   <%= button_to "Destroy this category", @category, method: :delete %>
 </div>
+
+<h2>Products in this Category:</h2>
+<% @products.each do |p| %>
+  <div>
+    <strong><%= p.name %></strong> (<%= p.current_price %>)
+    <%= link_to "View", product_path(p) %>
+  </div>
+<% end %>
