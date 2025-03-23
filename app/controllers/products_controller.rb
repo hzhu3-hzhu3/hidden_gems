@@ -1,5 +1,7 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :check_admin, except: [:index, :show]
 
   # GET /products or /products.json
   def index
@@ -66,5 +68,9 @@ class ProductsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def product_params
       params.expect(product: [ :name, :description, :img_url ])
+    end
+
+    def check_admin
+      redirect_to root_path, alert: "Access denied" unless current_user&.admin?
     end
 end
