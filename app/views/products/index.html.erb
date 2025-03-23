@@ -9,6 +9,13 @@
   <h3><%= product.name %> - $<%= product.current_price %></h3>
   <%= link_to 'View', product_path(product) %>
   <%= link_to "Add to Cart", add_to_cart_path(product), method: :post %>
+
+  <% if product.photo.attached? %>
+    <%= image_tag product.photo.variant(resize_to_limit: [300, 300]) %>
+  <% else %>
+    <p>No photo uploaded</p>
+  <% end %>
+
 <% end %>
 </div>
 

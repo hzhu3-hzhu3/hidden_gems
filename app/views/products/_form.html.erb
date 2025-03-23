@@ -8,6 +8,9 @@
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
+      
+      <%= form.label :photo, "Upload a photo" %><br>
+      <%= form.file_field :photo %>
     </div>
   <% end %>
 

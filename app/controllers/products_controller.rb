@@ -67,10 +67,11 @@ class ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.expect(product: [ :name, :description, :img_url ])
+      params.require(:product).permit(:name, :description, :photo)
     end
 
     def check_admin
       redirect_to root_path, alert: "Access denied" unless current_user&.admin?
     end
+
 end
