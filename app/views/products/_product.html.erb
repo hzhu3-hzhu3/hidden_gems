@@ -9,9 +9,12 @@
     <%= product.description %>
   </p>
 
-  <p>
-    <strong>Img url:</strong>
-    <%= product.img_url %>
-  </p>
+    <% if product.photo.attached? %>
+      <p><strong>Photo:</strong></p>
+      <%= image_tag product.photo.variant(resize_to_limit: [400, 400]) %>
+    <% else %>
+      <p>No photo uploaded</p>
+    <% end %>
+
 
 </div>
