@@ -4,8 +4,9 @@ class ProductsController < ApplicationController
   before_action :check_admin, except: [:index, :show]
 
   def index
-    @products = Product.all
+    @products = Product.page(params[:page]).per(1)
   end
+  
 
   def show
   end
@@ -66,8 +67,9 @@ class ProductsController < ApplicationController
 
 
     def product_params
-      params.require(:product).permit(:name, :description, :price, :photo)
-    end    
+      params.require(:product).permit(:name, :description, :photo, category_ids: [])
+    end
+    
 
     def check_admin
       redirect_to root_path, alert: "Access denied" unless current_user&.admin?

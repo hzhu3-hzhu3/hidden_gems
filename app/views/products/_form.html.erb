@@ -27,6 +27,21 @@
   </div>
 
   <div>
+    <%= label_tag :initial_price, "Initial Price", style: "display: block" %>
+    <%= number_field_tag :initial_price, nil, step: 0.01 %>
+  </div>
+
+  <div>
+  <%= form.label :category_ids, "Categories", style: "display: block" %>
+  <% Category.all.each do |category| %>
+    <div>
+      <%= check_box_tag "product[category_ids][]", category.id, product.category_ids.include?(category.id), id: "category_#{category.id}" %>
+      <%= label_tag "category_#{category.id}", category.name %>
+    </div>
+  <% end %>
+  </div>
+
+  <div>
     <%= form.label :photo, "Upload a photo", style: "display: block" %>
     <%= form.file_field :photo %>
   </div>

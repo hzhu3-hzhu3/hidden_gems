@@ -9,12 +9,19 @@
     <%= product.description %>
   </p>
 
-    <% if product.photo.attached? %>
-      <p><strong>Photo:</strong></p>
-      <%= image_tag product.photo.variant(resize_to_limit: [400, 400]) %>
-    <% else %>
-      <p>No photo uploaded</p>
-    <% end %>
+  <% if product.categories.any? %>
+  <p><strong>Categories:</strong>
+    <%= product.categories.map(&:name).join(", ") %>
+  </p>
+  <% end %>
+
+
+  <% if product.photo.attached? %>
+    <p><strong>Photo:</strong></p>
+    <%= image_tag product.photo.variant(resize_to_limit: [400, 400]) %>
+  <% else %>
+    <p>No photo uploaded</p>
+  <% end %>
 
 
 </div>

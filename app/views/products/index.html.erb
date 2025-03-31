@@ -6,7 +6,8 @@
 
 <div id="products">
 <% @products.each do |product| %>
-  <h3><%= product.name %> - $<%= product.current_price %></h3>
+  <h3><%= product.name %> - $<%= product.current_price || "?" %></h3>
+
   <%= link_to 'View', product_path(product) %>
   <%= link_to "Add to Cart", add_to_cart_path(product), method: :post %>
 
@@ -17,6 +18,10 @@
   <% end %>
 
 <% end %>
+<%= paginate @products %>
+
+<%= link_to "Browse by Category", categories_path %>
+
 </div>
 
 <%= link_to "New product", new_product_path %>
