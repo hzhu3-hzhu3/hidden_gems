@@ -1,0 +1,46 @@
+.active_admin {
+    .header {
+      background-color: #d791a3;
+      color: #fff;
+      padding: 1rem;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    .menu {
+      background-color: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+    }
+    
+    .dashboard-welcome {
+      padding: 1rem;
+      background-color: #e9ecef;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .dashboard-filters ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1rem 0;
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .dashboard-filters li a {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 0.25rem;
+      text-decoration: none;
+    }
+    
+    .dashboard-filters li a:hover {
+      background-color: #0056b3;
+    }
+  }
+  
+
+  .quill-editor-container {
+    height: 300px;
+    margin-bottom: 15px;
+  }

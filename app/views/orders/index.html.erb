@@ -1,0 +1,33 @@
+<div class="container my-4">
+  <h1>My Orders</h1>
+  
+  <% if @orders.empty? %>
+    <div class="alert alert-info">
+      You haven't placed any orders yet.
+    </div>
+  <% else %>
+    <div class="list-group">
+      <% @orders.each do |order| %>
+        <%= link_to order_path(order), class: "list-group-item list-group-item-action" do %>
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Order #<%= order.id %></h5>
+            <small>
+              <span class="badge <%= order.status == 'paid' ? 'bg-success' : (order.status == 'pending' ? 'bg-warning' : 'bg-danger') %>">
+                <%= order.status.titleize %>
+              </span>
+            </small>
+          </div>
+          <p class="mb-1">
+            Date: <%= order.created_at.strftime("%B %d, %Y") %><br>
+            Items: <%= order.order_items.count %><br>
+            Total: $<%= sprintf("%.2f", order.total_price) %>
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <div class="mt-4">
+    <%= link_to "Continue Shopping", products_path, class: "btn btn-primary" %>
+  </div>
+</div>

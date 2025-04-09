@@ -1,10 +1,38 @@
 //= require active_admin/base
 
 document.addEventListener('DOMContentLoaded', function() {
-    const deleteLinks = document.querySelectorAll('a[data-method="delete"]');
-    deleteLinks.forEach(function(link) {
-      link.setAttribute('data-turbo', 'false');
+  const deleteLinks = document.querySelectorAll('.delete-link, a[data-method="delete"]');
+  deleteLinks.forEach(function(link) {
+
+    link.setAttribute('data-turbo', 'false');
+    
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      if (confirm('Are you sure you want to delete this item?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = this.href;
+        form.style.display = 'none';
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'delete';
+        form.appendChild(methodInput);
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'authenticity_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+      }
     });
+  });
 
     const editors = document.querySelectorAll('.quill-editor');
     if(editors.length > 0) {

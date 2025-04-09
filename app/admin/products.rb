@@ -1,5 +1,6 @@
 ActiveAdmin.register Product do
   permit_params :name, :description, :photo, category_ids: []
+  actions :all
 
   filter :name
   filter :description
@@ -10,7 +11,7 @@ ActiveAdmin.register Product do
     selectable_column
     column :name
     column :description
-
+    
     column :photo do |product|
       if product.photo.attached?
         image_tag url_for(product.photo.variant(:thumb)), size: "100x100"
@@ -18,13 +19,14 @@ ActiveAdmin.register Product do
         status_tag("No Image", class: "warning")
       end
     end
-
+    
     actions defaults: false do |product|
       item "View", admin_product_path(product)
       item "Edit", edit_admin_product_path(product)
-      item "Delete", admin_product_path(product),
-        method: :delete,
-        data: { confirm: "Are you sure?", turbo: false }
+      item "Delete", admin_product_path(product), 
+          method: :delete, 
+          data: { confirm: "Are you sure?", turbo: false }, 
+          class: "delete-link"
     end
   end
 

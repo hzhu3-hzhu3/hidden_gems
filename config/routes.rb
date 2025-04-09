@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   root to: 'products#index'
   
@@ -16,10 +17,9 @@ Rails.application.routes.draw do
   resources :products
   resources :customers, except: [:index, :destroy]
   resources :addresses
+  resources :orders, only: [:index, :show, :create]
   
   devise_for :users
   
   get 'up', to: 'rails/health#show', as: :rails_health_check
-  # get 'manifest', to: 'rails/pwa#manifest', as: :pwa_manifest
-  # get 'service-worker', to: 'rails/pwa#service_worker', as: :pwa_service_worker
 end

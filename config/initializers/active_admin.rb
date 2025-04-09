@@ -229,8 +229,10 @@ ActiveAdmin.setup do |config|
   #
   # You can provide an options hash for more control, which is passed along to stylesheet_link_tag():
   #   config.register_stylesheet 'my_print_stylesheet.css', media: :print
-  config.register_stylesheet 'active_admin_custom.css'
+  config.register_stylesheet 'active_admin_custom'
+  config.register_stylesheet 'active_admin'
   config.register_stylesheet "https://cdn.quilljs.com/1.3.7/quill.snow.css"
+  config.register_javascript 'active_admin'
   config.register_javascript "https://cdn.quilljs.com/1.3.7/quill.min.js"
   #
   # To load a javascript file:
