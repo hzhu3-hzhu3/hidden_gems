@@ -1,0 +1,47 @@
+<!-- app/views/customers/show.html.erb -->
+<div class="container my-4">
+  <h1>Customer Profile</h1>
+  
+  <div class="card mb-4">
+    <div class="card-header">
+      Personal Information
+    </div>
+    <div class="card-body">
+      <p><strong>Name:</strong> <%= @customer.full_name %></p>
+      <p><strong>Email:</strong> <%= @customer.email %></p>
+      <p><strong>Phone:</strong> <%= @customer.phone %></p>
+      
+      <%= link_to "Edit Profile", edit_customer_path(@customer), class: "btn btn-outline-primary" %>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>Shipping Addresses</span>
+      <%= link_to "Add New Address", new_address_path, class: "btn btn-sm btn-outline-success" %>
+    </div>
+    <div class="card-body">
+      <% if @customer.addresses.empty? %>
+        <div class="alert alert-info">
+          You haven't added any addresses yet.
+        </div>
+      <% else %>
+        <ul class="list-group">
+          <% @customer.addresses.each do |address| %>
+            <li class="list-group-item">
+              <%= address.full_address %>
+              <div class="mt-2">
+                <%= link_to "Edit", edit_address_path(address), class: "btn btn-sm btn-outline-primary" %>
+                <%= button_to "Delete", address_path(address), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: "Are you sure you want to delete this address?", turbo: false } %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="mt-4">
+    <%= link_to "Continue Shopping", products_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>

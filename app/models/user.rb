@@ -4,19 +4,21 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   
-  validates :username, presence: true       
-
+  has_one :customer, dependent: :destroy
+  validates :username, presence: true
+  
   after_initialize :set_default_role, if: :new_record?
-
+  
   def set_default_role
-    self.user_role ||= 0   # 0 = customer, 1 = admin
+    self.role ||= 0 # 0 = customer, 1 = admin
   end
-
+  
   def admin?
-    user_role == 1
+    role == 1
   end
-
+  
   def customer?
-    user_role == 0
+    role == 0
   end
+  
 end

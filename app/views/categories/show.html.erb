@@ -1,18 +1,66 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @category.name %>
 
-<%= render @category %>
+<div class="container my-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <% @breadcrumbs.each_with_index do |crumb, index| %>
+        <% if index == @breadcrumbs.size - 1 %>
+          <li class="breadcrumb-item active" aria-current="page"><%= crumb[:name] %></li>
+        <% else %>
+          <li class="breadcrumb-item"><%= link_to crumb[:name], crumb[:path] %></li>
+        <% end %>
+      <% end %>
+    </ol>
+  </nav>
 
-<div>
-  <%= link_to "Edit this category", edit_category_path(@category) %> |
-  <%= link_to "Back to categories", categories_path %>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4"><%= @category.name %> Products</h1>
+      <p class="text-success"><%= notice %></p>
+    </div>
+  </div>
 
-  <%= button_to "Destroy this category", @category, method: :delete %>
+  <div class="row">
+    <% if @products.empty? %>
+      <div class="col-12">
+        <div class="alert alert-info">
+          No products found in this category.
+        </div>
+      </div>
+    <% else %>
+      <% @products.each do |product| %>
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <% if product.photo.attached? %>
+              <%= image_tag product.photo.variant(:thumb), class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+            <% else %>
+              <div class="card-img-top bg-secondary text-white text-center py-5" style="height: 200px;">
+                No Image
+              </div>
+            <% end %>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><%= product.name %></h5>
+              <p class="card-text">$<%= product.current_price %></p>
+              <div class="mt-auto">
+                <%= link_to 'View Details', product_path(product), class: "btn btn-primary btn-sm" %>
+                <%= link_to "Add to Cart", add_to_cart_path(product), method: :post, class: "btn btn-success btn-sm mt-1", data: { turbo: false } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="row mt-3">
+  <div class="col-12 d-flex justify-content-center">
+    <%= paginate @products %>
+  </div>
 </div>
 
-<h2>Products in this Category:</h2>
-<% @products.each do |p| %>
-  <div>
-    <strong><%= p.name %></strong> (<%= p.current_price %>)
-    <%= link_to "View", product_path(p) %>
+  <div class="row mt-4">
+    <div class="col-12">
+      <%= link_to "Back to all categories", categories_path, class: "btn btn-outline-secondary" %>
+    </div>
   </div>
-<% end %>
+</div>

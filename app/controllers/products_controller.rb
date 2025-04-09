@@ -4,11 +4,20 @@ class ProductsController < ApplicationController
   before_action :check_admin, except: [:index, :show]
 
   def index
-    @products = Product.page(params[:page]).per(1)
+    @products = Product.all  
+    if params[:filter_new].present?
+      @products = @products.where("created_at >= ?", 3.days.ago)
+    end
+    
+    if params[:filter_updated].present?
+      @products = @products.where("updated_at > created_at AND updated_at >= ?", 3.days.ago)
+    end
+
+    @products = @products.page(params[:page]).per(9)
   end
-  
 
   def show
+    @product = Product.find(params[:id])
   end
 
   def new
@@ -20,15 +29,8 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(product_params)
-  
     respond_to do |format|
       if @product.save
-        ProductPrice.create!(
-          product: @product,
-          price: params[:initial_price],
-          effective_date: Time.current
-        )
-  
         format.html { redirect_to @product, notice: "Product was successfully created." }
         format.json { render :show, status: :created, location: @product }
       else
@@ -37,7 +39,6 @@ class ProductsController < ApplicationController
       end
     end
   end
-  
 
   def update
     respond_to do |format|
@@ -53,7 +54,6 @@ class ProductsController < ApplicationController
 
   def destroy
     @product.destroy!
-
     respond_to do |format|
       format.html { redirect_to products_path, status: :see_other, notice: "Product was successfully destroyed." }
       format.json { head :no_content }
@@ -61,18 +61,16 @@ class ProductsController < ApplicationController
   end
 
   private
-    def set_product
-      @product = Product.find(params.expect(:id))
-    end
 
+    def set_product
+      @product = Product.find(params[:id])
+    end
 
     def product_params
-      params.require(:product).permit(:name, :description, :photo, category_ids: [])
+      params.require(:product).permit(:name, :description, :photo)
     end
-    
 
     def check_admin
       redirect_to root_path, alert: "Access denied" unless current_user&.admin?
     end
-
 end

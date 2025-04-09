@@ -1,0 +1,18 @@
+<% if @page %>
+  <div class="container my-4">
+    <div class="card">
+      <div class="card-header">
+        <h1><%= @page.slug.titleize %></h1>
+      </div>
+      <div class="card-body">
+        <%= @page.body.html_safe %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="container my-4">
+    <div class="alert alert-warning">
+      Page not found.
+    </div>
+  </div>
+<% end %>

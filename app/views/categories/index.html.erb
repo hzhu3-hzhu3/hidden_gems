@@ -1,14 +1,38 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Categories" %>
 
-<h1>Categories</h1>
+<div class="container my-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">Browse by Category</h1>
+      <p class="text-success"><%= notice %></p>
+    </div>
+  </div>
 
-<div id="categories">
-  <% @categories.each do |category| %>
-    <%= link_to category.name, category_path(category) %>
-  <% end %>
+  <div class="row">
+    <% if @categories.empty? %>
+      <div class="col-12">
+        <div class="alert alert-info">
+          No categories found.
+        </div>
+      </div>
+    <% else %>
+      <% @categories.each do |category| %>
+        <div class="col-md-3 mb-4">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <h5 class="card-title"><%= category.name %></h5>
+              <p class="card-text"><small class="text-muted"><%= category.products.count %> products</small></p>
+              <%= link_to "Browse Products", category_path(category), class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 
+  <div class="row mt-4">
+    <div class="col-12">
+      <%= link_to "Back to all products", products_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
 </div>
-
-<%= link_to "New category", new_category_path %>
