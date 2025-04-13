@@ -10,15 +10,15 @@
   <div class="row mb-3">
     <div class="col">
       <div class="filter-options">
-        <%= link_to "All Products", products_path(filter_new: nil, filter_updated: nil),
+        <%= link_to "All Products", root_path, 
             class: "btn #{!params[:filter_new] && !params[:filter_updated] ? 'btn-primary' : 'btn-outline-primary'}" %>
         
         <%= link_to "New Products",
-            products_path(filter_new: true, filter_updated: params[:filter_updated]),
+            root_path(filter_new: true, filter_updated: params[:filter_updated]),
             class: "btn #{params[:filter_new] ? 'btn-primary' : 'btn-outline-primary'}" %>
         
         <%= link_to "Recently Updated",
-            products_path(filter_new: params[:filter_new], filter_updated: true),
+            root_path(filter_new: params[:filter_new], filter_updated: true),
             class: "btn #{params[:filter_updated] ? 'btn-primary' : 'btn-outline-primary'}" %>
       </div>
     </div>

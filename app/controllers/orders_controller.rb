@@ -112,35 +112,8 @@ class OrdersController < ApplicationController
   end
   
   def set_tax_rates_for_province(province)
-    case province.strip.downcase
-    when "alberta", "northwest territories", "nunavut", "yukon"
-      @order.gst_rate = 0.05
-      @order.pst_rate = 0.00
-    when "british columbia"
-      @order.gst_rate = 0.05
-      @order.pst_rate = 0.07
-    when "manitoba"
-      @order.gst_rate = 0.05
-      @order.pst_rate = 0.07
-    when "new brunswick", "newfoundland and labrador", "prince edward island"
-      @order.gst_rate = 0.15
-      @order.pst_rate = 0.00
-    when "nova scotia"
-      @order.gst_rate = 0.14
-      @order.pst_rate = 0.00
-    when "ontario"
-      @order.gst_rate = 0.13
-      @order.pst_rate = 0.00
-    when "quebec"
-      @order.gst_rate = 0.05
-      @order.pst_rate = 0.09975
-    when "saskatchewan"
-      @order.gst_rate = 0.05
-      @order.pst_rate = 0.06
-    else
-      @order.gst_rate = 0.05
-      @order.pst_rate = 0.07
-    end
+    @order.gst_rate = Order.gst_rate_for_province(province)
+    @order.pst_rate = Order.pst_rate_for_province(province)
   end
   
   def get_provinces_with_taxes
