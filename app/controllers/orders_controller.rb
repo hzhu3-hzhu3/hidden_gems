@@ -2,7 +2,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_customer, except: [:index, :show]
   before_action :set_order, only: [:show]
-
+  
   def index
     if current_user.customer.present?
       @orders = current_user.customer.orders.order(created_at: :desc)
@@ -10,7 +10,7 @@ class OrdersController < ApplicationController
       redirect_to new_customer_path, notice: "Please create your customer profile first"
     end
   end
-
+  
   def show
     @order = current_user.customer.orders.find(params[:id])
   end
@@ -21,46 +21,82 @@ class OrdersController < ApplicationController
       return
     end
     
-    @order = current_user.customer.orders.new
-    @address = current_user.customer.addresses.first || Address.new
     @provinces = get_provinces_with_taxes
-    
-    calculate_cart_preview
+    @addresses = current_user.customer.addresses
   end
-
+  
+  def review
+    if session[:cart].blank? || session[:cart].empty?
+      redirect_to cart_show_path, alert: "Your cart is empty"
+      return
+    end
+    
+    if params[:use_new_address] == "1"
+      @address = current_user.customer.addresses.build(
+        street: params[:address][:street],
+        city: params[:address][:city],
+        province: params[:address][:province],
+        postal_code: params[:address][:postal_code]
+      )
+      @new_address = true
+    elsif params[:address_id].present?
+      @address = current_user.customer.addresses.find(params[:address_id])
+      @new_address = false
+    else
+      redirect_to new_order_path, alert: "Please select or enter a shipping address"
+      return
+    end
+    
+    calculate_cart_preview(@address.province)
+    
+    session[:order_address] = {
+      id: @new_address ? nil : @address.id,
+      street: @address.street,
+      city: @address.city,
+      province: @address.province,
+      postal_code: @address.postal_code,
+      new_address: @new_address
+    }
+  end
+  
   def create
     unless current_user.customer.present?
       redirect_to new_customer_path, alert: "Please create your customer profile first"
       return
     end
-
+    
     if session[:cart].blank? || session[:cart].empty?
       redirect_to cart_show_path, alert: "Your cart is empty"
       return
     end
-
-    if address_params[:id].present?
-      @address = current_user.customer.addresses.find(address_params[:id])
-    else
-      @address = current_user.customer.addresses.build(
-        street: address_params[:street],
-        city: address_params[:city],
-        province: address_params[:province],
-        postal_code: address_params[:postal_code]
+    
+    if session[:order_address].blank?
+      redirect_to new_order_path, alert: "Please select a shipping address"
+      return
+    end
+    
+    address_info = session[:order_address]
+    
+    if address_info["new_address"] == true
+      @address = current_user.customer.addresses.create(
+        street: address_info["street"],
+        city: address_info["city"],
+        province: address_info["province"],
+        postal_code: address_info["postal_code"]
       )
       
-      unless @address.save
-        flash.now[:alert] = "Could not save address: #{@address.errors.full_messages.join(', ')}"
-        redirect_to new_order_path, status: :unprocessable_entity
+      unless @address.persisted?
+        redirect_to new_order_path, alert: "Could not save address: #{@address.errors.full_messages.join(', ')}"
         return
       end
+    else
+      @address = current_user.customer.addresses.find(address_info["id"])
     end
-
+    
     @order = current_user.customer.orders.new
     @order.status = :pending
     @order.address = @address
     
-
     set_tax_rates_for_province(@address.province)
     
     total_before_tax = 0
@@ -89,12 +125,13 @@ class OrdersController < ApplicationController
     
     if @order.save
       session[:cart] = {}
+      session[:order_address] = nil
       redirect_to @order, notice: "Order successfully placed!"
     else
       redirect_to new_order_path, alert: "Failed to create order: #{@order.errors.full_messages.join(', ')}"
     end
   end
-
+  
   private
   
   def set_customer
@@ -124,7 +161,7 @@ class OrdersController < ApplicationController
       { name: 'New Brunswick', gst: 15, pst: 0 },
       { name: 'Newfoundland and Labrador', gst: 15, pst: 0 },
       { name: 'Northwest Territories', gst: 5, pst: 0 },
-      { name: 'Nova Scotia', gst: 14, pst: 0 },
+      { name: 'Nova Scotia', gst: 14, pst: 0 }, 
       { name: 'Nunavut', gst: 5, pst: 0 },
       { name: 'Ontario', gst: 13, pst: 0 },
       { name: 'Prince Edward Island', gst: 15, pst: 0 },
@@ -134,17 +171,11 @@ class OrdersController < ApplicationController
     ]
   end
   
-  def calculate_cart_preview
+  def calculate_cart_preview(province)
     @items = []
     @subtotal = 0
-    @gst_rate = 0.05
-    @pst_rate = 0.07
-    
-    if params[:address_id].present? && (address = current_user.customer.addresses.find_by(id: params[:address_id]))
-      set_tax_rates_for_province(address.province)
-    elsif params[:province].present?
-      set_tax_rates_for_province(params[:province])
-    end
+    @gst_rate = Order.gst_rate_for_province(province)
+    @pst_rate = Order.pst_rate_for_province(province)
     
     session[:cart].each do |product_id, qty|
       product = Product.find_by(id: product_id)

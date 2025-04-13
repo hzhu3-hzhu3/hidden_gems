@@ -53,25 +53,44 @@
           </div>
         </form>
 
-        <div class="d-flex align-items-center gap-2">
-          <%= link_to cart_show_path, class: "btn btn-outline-primary me-2 position-relative" do %>
-            <i class="bi bi-cart"></i> Cart
-            <% if @cart_count > 0 %>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                <%= @cart_count %>
-              </span>
-            <% end %>
-          <% end %>
-          
-          <% if current_user %>
-            <span class="navbar-text me-2">Welcome, <%= current_user.username %></span>
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline-secondary btn-sm" %>
-          <% elsif current_admin_user %>
-            <%= link_to "Logout", destroy_admin_user_session_path, method: :delete, class: "btn btn-outline-secondary btn-sm" %>
+      <div class="d-flex align-items-center gap-2">
+      <%= link_to cart_show_path, class: "btn btn-outline-primary me-2 position-relative" do %>
+      <i class="bi bi-cart"></i> Cart
+      <% if @cart_count > 0 %>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      <%= @cart_count %>
+      </span>
+      <% end %>
+      <% end %>
+
+      <% if current_user %>
+      <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <%= current_user.username %>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <% if current_user.customer %>
+            <li><%= link_to "My Profile", customer_path(current_user.customer), class: "dropdown-item" %></li>
+            <li><%= link_to "My Addresses", addresses_path, class: "dropdown-item" %></li>
+            <li><%= link_to "My Orders", orders_path, class: "dropdown-item" %></li>
+            <li><hr class="dropdown-divider"></li>
           <% else %>
-            <%= link_to "Login", new_user_session_path, class: "btn btn-outline-primary btn-sm" %>
+            <li><%= link_to "Create Profile", new_customer_path, class: "dropdown-item" %></li>
+            <li><hr class="dropdown-divider"></li>
           <% end %>
-        </div>
+          <li>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item", data: { turbo: "false" } %>
+          </li>
+        </ul>
+      </div>
+      <% elsif current_admin_user %>
+      <%= link_to "Admin Dashboard", admin_root_path, class: "btn btn-outline-danger btn-sm me-2" %>
+      <%= button_to "Logout", destroy_admin_user_session_path, method: :delete, class: "btn btn-outline-secondary btn-sm", data: { turbo: "false" } %>
+      <% else %>
+      <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-outline-success btn-sm me-2" %>
+      <%= link_to "Login", new_user_session_path, class: "btn btn-outline-primary btn-sm" %>
+      <% end %>
+      </div>
       </div>
     </div>
   </nav>

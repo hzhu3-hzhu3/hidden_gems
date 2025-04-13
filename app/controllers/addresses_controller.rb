@@ -1,4 +1,3 @@
-# app/controllers/addresses_controller.rb
 class AddressesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_customer
@@ -13,6 +12,7 @@ class AddressesController < ApplicationController
   
   def new
     @address = current_user.customer.addresses.build
+    @provinces = get_provinces_list
   end
   
   def create
@@ -21,17 +21,20 @@ class AddressesController < ApplicationController
     if @address.save
       redirect_to addresses_path, notice: "Address added successfully!"
     else
+      @provinces = get_provinces_list
       render :new, status: :unprocessable_entity
     end
   end
   
   def edit
+    @provinces = get_provinces_list
   end
   
   def update
     if @address.update(address_params)
       redirect_to addresses_path, notice: "Address updated successfully!"
     else
+      @provinces = get_provinces_list
       render :edit, status: :unprocessable_entity
     end
   end
@@ -55,5 +58,23 @@ class AddressesController < ApplicationController
   
   def address_params
     params.require(:address).permit(:street, :city, :province, :postal_code)
+  end
+  
+  def get_provinces_list
+    [
+      'Alberta',
+      'British Columbia',
+      'Manitoba',
+      'New Brunswick',
+      'Newfoundland and Labrador',
+      'Northwest Territories',
+      'Nova Scotia',
+      'Nunavut',
+      'Ontario',
+      'Prince Edward Island',
+      'Quebec',
+      'Saskatchewan',
+      'Yukon'
+    ]
   end
 end

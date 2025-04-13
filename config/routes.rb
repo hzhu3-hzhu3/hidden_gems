@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   resources :products
   resources :customers, except: [:index, :destroy]
   resources :addresses
-  resources :orders, only: [:index, :show, :new, :create]
+  resources :orders, only: [:index, :show, :new, :create] do
+    collection do
+      post 'review' 
+    end
+  end
   
   devise_for :users
   
