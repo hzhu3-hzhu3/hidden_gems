@@ -1,4 +1,3 @@
-# config/routes.rb
 Rails.application.routes.draw do
   root to: 'products#index'
   
@@ -17,7 +16,7 @@ Rails.application.routes.draw do
   resources :products
   resources :customers, except: [:index, :destroy]
   resources :addresses
-  resources :orders, only: [:index, :show, :create]
+  resources :orders, only: [:index, :show, :new, :create]
   
   devise_for :users
   
