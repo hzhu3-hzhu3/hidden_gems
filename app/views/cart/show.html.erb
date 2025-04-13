@@ -91,11 +91,11 @@
           <i class="bi bi-arrow-left"></i> Continue Shopping
         <% end %>
       </div>
-      <div class="col-md-6 text-end">
-        <%= button_to orders_path, method: :post, class: "btn btn-primary" do %>
-          Proceed to Checkout <i class="bi bi-arrow-right"></i>
-        <% end %>
-      </div>
+    <div class="col-md-6 text-end">
+      <%= link_to new_order_path, class: "btn btn-primary" do %>
+        Proceed to Checkout <i class="bi bi-arrow-right"></i>
+      <% end %>
+    </div>
     </div>
   <% end %>
 </div>
