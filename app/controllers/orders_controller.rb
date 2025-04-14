@@ -30,8 +30,13 @@ class OrdersController < ApplicationController
       redirect_to cart_show_path, alert: "Your cart is empty"
       return
     end
-    
+  
     if params[:use_new_address] == "1"
+      if params[:address][:province].blank?
+        redirect_to new_order_path, alert: "Please select at least a province"
+        return
+      end
+  
       @address = current_user.customer.addresses.build(
         street: params[:address][:street],
         city: params[:address][:city],
@@ -46,9 +51,9 @@ class OrdersController < ApplicationController
       redirect_to new_order_path, alert: "Please select or enter a shipping address"
       return
     end
-    
+  
     calculate_cart_preview(@address.province)
-    
+  
     session[:order_address] = {
       id: @new_address ? nil : @address.id,
       street: @address.street,
