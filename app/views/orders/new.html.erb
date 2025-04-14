@@ -9,13 +9,12 @@
       <div class="card-body">
         <% if current_user.customer.addresses.any? %>
           <div class="mb-3">
-            <label class="form-label">Select an existing address:</label>
-            <select name="address_id" id="address-select" class="form-select" <%= 'disabled' if params[:use_new_address] == '1' %>>
-              <option value="">-- Select an address --</option>
-              <% current_user.customer.addresses.each do |address| %>
-                <option value="<%= address.id %>">
-                  <%= address.full_address %>
-                </option>
+            <label for="address-province" class="form-label">Province <span class="text-danger">*</span></label>
+            <select class="form-select" id="address-province" name="address[province_id]" required>
+              <% Province.all.each do |province| %>
+              <option value="<%= province.id %>">
+                <%= province.display_name %>
+              </option>
               <% end %>
             </select>
           </div>

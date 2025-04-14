@@ -56,4 +56,28 @@ while unique_count < 100
 
     unique_count += 1
   end
+
+  provinces_data = [
+  { name: 'Alberta', gst_rate: 0.05, pst_rate: 0.00, has_hst: false },
+  { name: 'British Columbia', gst_rate: 0.05, pst_rate: 0.07, has_hst: false },
+  { name: 'Manitoba', gst_rate: 0.05, pst_rate: 0.07, has_hst: false },
+  { name: 'New Brunswick', gst_rate: 0.15, pst_rate: 0.00, has_hst: true },
+  { name: 'Newfoundland and Labrador', gst_rate: 0.15, pst_rate: 0.00, has_hst: true },
+  { name: 'Northwest Territories', gst_rate: 0.05, pst_rate: 0.00, has_hst: false },
+  { name: 'Nova Scotia', gst_rate: 0.14, pst_rate: 0.00, has_hst: true },
+  { name: 'Nunavut', gst_rate: 0.05, pst_rate: 0.00, has_hst: false },
+  { name: 'Ontario', gst_rate: 0.13, pst_rate: 0.00, has_hst: true },
+  { name: 'Prince Edward Island', gst_rate: 0.15, pst_rate: 0.00, has_hst: true },
+  { name: 'Quebec', gst_rate: 0.05, pst_rate: 0.09975, has_hst: false },
+  { name: 'Saskatchewan', gst_rate: 0.05, pst_rate: 0.06, has_hst: false },
+  { name: 'Yukon', gst_rate: 0.05, pst_rate: 0.00, has_hst: false }
+]
+
+  provinces_data.each do |province_data|
+    Province.find_or_create_by!(name: province_data[:name]) do |province|
+      province.gst_rate = province_data[:gst_rate]
+      province.pst_rate = province_data[:pst_rate]
+      province.has_hst = province_data[:has_hst]
+    end
+  end
 end

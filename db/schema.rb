@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_165653) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_14_200919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,11 +60,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_165653) do
     t.bigint "customer_id", null: false
     t.string "street"
     t.string "city"
-    t.string "province"
     t.string "postal_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "province_id"
     t.index ["customer_id"], name: "index_addresses_on_customer_id"
+    t.index ["province_id"], name: "index_addresses_on_province_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -153,6 +154,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_165653) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "provinces", force: :cascade do |t|
+    t.string "name", null: false
+    t.decimal "gst_rate", precision: 5, scale: 2, default: "0.05"
+    t.decimal "pst_rate", precision: 5, scale: 2, default: "0.0"
+    t.boolean "has_hst", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_provinces_on_name", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -170,6 +181,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_165653) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "customers"
+  add_foreign_key "addresses", "provinces"
   add_foreign_key "customers", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"

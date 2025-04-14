@@ -24,8 +24,8 @@
 </div>
 
 <div class="form-group mb-3">
-<%= form.label :province, "Province", class: "form-label" %>
-<%= form.select :province, @provinces, {}, class: "form-select" %>
+  <%= form.label :province_id, "Province", class: "form-label" %>
+  <%= form.collection_select :province_id, Province.all, :id, :display_name, {}, class: "form-select" %>
 </div>
 
 <div class="form-group mb-3">

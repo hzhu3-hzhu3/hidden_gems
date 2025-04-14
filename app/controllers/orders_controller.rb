@@ -153,27 +153,21 @@ class OrdersController < ApplicationController
     params.require(:address).permit(:id, :street, :city, :province, :postal_code)
   end
   
-  def set_tax_rates_for_province(province)
-    @order.gst_rate = Order.gst_rate_for_province(province)
-    @order.pst_rate = Order.pst_rate_for_province(province)
+  def set_tax_rates_for_province(province_id)
+    province = Province.find(province_id)
+    @order.gst_rate = province.gst_rate
+    @order.pst_rate = province.pst_rate
   end
   
   def get_provinces_with_taxes
-    [
-      { name: 'Alberta', gst: 5, pst: 0 },
-      { name: 'British Columbia', gst: 5, pst: 7 },
-      { name: 'Manitoba', gst: 5, pst: 7 },
-      { name: 'New Brunswick', gst: 15, pst: 0 },
-      { name: 'Newfoundland and Labrador', gst: 15, pst: 0 },
-      { name: 'Northwest Territories', gst: 5, pst: 0 },
-      { name: 'Nova Scotia', gst: 14, pst: 0 }, 
-      { name: 'Nunavut', gst: 5, pst: 0 },
-      { name: 'Ontario', gst: 13, pst: 0 },
-      { name: 'Prince Edward Island', gst: 15, pst: 0 },
-      { name: 'Quebec', gst: 5, pst: 9.975 },
-      { name: 'Saskatchewan', gst: 5, pst: 6 },
-      { name: 'Yukon', gst: 5, pst: 0 }
-    ]
+    Province.all.map do |province|
+      { 
+        id: province.id,
+        name: province.name, 
+        gst: (province.gst_rate * 100).round(2),
+        pst: (province.pst_rate * 100).round(2)
+      }
+    end
   end
   
   def calculate_cart_preview(province)
