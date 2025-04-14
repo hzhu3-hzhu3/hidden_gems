@@ -32,25 +32,25 @@
         <div id="new-address-form" <%= 'style="display:none;"' if current_user.customer.addresses.any? && params[:use_new_address] != '1' %>>
           <div class="mb-3">
             <label for="address-street" class="form-label">Street Address</label>
-            <input type="text" class="form-control" id="address-street" name="address[street]" required>
+            <input type="text" class="form-control" id="address-street" name="address[street]">
           </div>
           <div class="mb-3">
             <label for="address-city" class="form-label">City</label>
-            <input type="text" class="form-control" id="address-city" name="address[city]" required>
+            <input type="text" class="form-control" id="address-city" name="address[city]">
           </div>
           <div class="mb-3">
-            <label for="address-province" class="form-label">Province</label>
+            <label for="address-province" class="form-label">Province <span class="text-danger">*</span></label>
             <select class="form-select" id="address-province" name="address[province]" required>
               <% @provinces.each do |province| %>
-                <option value="<%= province[:name] %>">
-                  <%= province[:name] %> (GST & HST: <%= province[:gst] %>%, PST: <%= province[:pst] %>%)
-                </option>
+              <option value="<%= province[:name] %>">
+                <%= province[:name] %> (GST & HST: <%= province[:gst] %>%, PST: <%= province[:pst] %>%)
+              </option>
               <% end %>
             </select>
           </div>
           <div class="mb-3">
             <label for="address-postal" class="form-label">Postal Code</label>
-            <input type="text" class="form-control" id="address-postal" name="address[postal_code]" required>
+            <input type="text" class="form-control" id="address-postal" name="address[postal_code]">
           </div>
         </div>
       </div>
@@ -68,15 +68,23 @@ document.addEventListener('DOMContentLoaded', function() {
   const useNewAddressCheckbox = document.getElementById('use-new-address');
   const addressSelect = document.getElementById('address-select');
   const newAddressForm = document.getElementById('new-address-form');
-
+  
+  if (addressSelect && addressSelect.value && useNewAddressCheckbox && !useNewAddressCheckbox.checked) {
+    newAddressForm.style.display = 'none';
+  }
+  
   if (useNewAddressCheckbox) {
     useNewAddressCheckbox.addEventListener('change', function() {
       if (this.checked) {
-        addressSelect.value = '';
-        addressSelect.disabled = true;
+        if (addressSelect) {
+          addressSelect.value = '';
+          addressSelect.disabled = true;
+        }
         newAddressForm.style.display = 'block';
       } else {
-        addressSelect.disabled = false;
+        if (addressSelect) {
+          addressSelect.disabled = false;
+        }
         newAddressForm.style.display = 'none';
       }
     });
@@ -87,10 +95,15 @@ document.addEventListener('DOMContentLoaded', function() {
       if (this.value) {
         if (useNewAddressCheckbox) {
           useNewAddressCheckbox.checked = false;
-          newAddressForm.style.display = 'none';
         }
+        newAddressForm.style.display = 'none';
       }
     });
+    
+    if (addressSelect.value) {
+      const event = new Event('change');
+      addressSelect.dispatchEvent(event);
+    }
   }
 });
 </script>
