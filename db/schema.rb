@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_16_153140) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_16_153649) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -119,6 +119,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_153140) do
     t.decimal "gst_rate", precision: 5, scale: 2, default: "0.05"
     t.decimal "pst_rate", precision: 5, scale: 2, default: "0.07"
     t.string "stripe_payment_id"
+    t.string "stripe_session_id"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
