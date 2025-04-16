@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "payments/create"
-  get "payments/success"
   root to: 'products#index'
   
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -14,13 +12,16 @@ Rails.application.routes.draw do
   
   get '/search', to: 'search#index', as: 'search'
   
+  post '/orders/:id/payments', to: 'payments#create', as: 'create_payment'
+  get '/orders/:order_id/payments/success', to: 'payments#success', as: 'success_payment'
+  
   resources :categories
   resources :products
   resources :customers, except: [:index, :destroy]
   resources :addresses
   resources :orders, only: [:index, :show, :new, :create] do
     collection do
-      post 'review' 
+      post 'review'
     end
   end
   
