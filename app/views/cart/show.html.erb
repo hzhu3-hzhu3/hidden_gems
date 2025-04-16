@@ -1,4 +1,3 @@
-<%# app/views/cart/show.html.erb %>
 <div class="container my-4">
   <div class="row">
     <div class="col-12">
@@ -65,19 +64,9 @@
                 <th></th>
               </tr>
               <tr>
-                <th colspan="3" class="text-end">Estimated GST and HST (5%):</th>
-                <th>$<%= sprintf("%.2f", @total * 0.05) %></th>
-                <th></th>
-              </tr>
-              <tr>
-                <th colspan="3" class="text-end">Estimated PST (7%):</th>
-                <th>$<%= sprintf("%.2f", @total * 0.07) %></th>
-                <th></th>
-              </tr>
-              <tr>
-                <th colspan="3" class="text-end">Estimated Total:</th>
-                <th>$<%= sprintf("%.2f", @total * 1.12) %></th>
-                <th></th>
+                <td colspan="5" class="text-muted small">
+                  <i>Note: Taxes will be calculated during checkout based on your province.</i>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -91,11 +80,11 @@
           <i class="bi bi-arrow-left"></i> Continue Shopping
         <% end %>
       </div>
-    <div class="col-md-6 text-end">
-      <%= link_to new_order_path, class: "btn btn-primary" do %>
-        Proceed to Checkout <i class="bi bi-arrow-right"></i>
-      <% end %>
-    </div>
+      <div class="col-md-6 text-end">
+        <%= link_to new_order_path, class: "btn btn-primary" do %>
+          Proceed to Checkout <i class="bi bi-arrow-right"></i>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>

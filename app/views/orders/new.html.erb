@@ -7,16 +7,33 @@
         <h5 class="mb-0">Select Shipping Address</h5>
       </div>
       <div class="card-body">
+        <% if current_user.customer && current_user.customer.addresses.any? %>
+          <div class="mb-4">
+            <h6>Your Saved Addresses</h6>
+            <div class="saved-addresses mb-3">
+              <% current_user.customer.addresses.each do |address| %>
+                <div class="form-check mb-2">
+                  <%= radio_button_tag :address_id, address.id, false, class: "form-check-input", id: "address_#{address.id}" %>
+                  <%= label_tag "address_#{address.id}", address.full_address, class: "form-check-label" %>
+                </div>
+              <% end %>
+            </div>
+            <div class="separator">
+              <span>OR</span>
+            </div>
+          </div>
+        <% end %>
+
         <div class="mb-3">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="use-new-address" name="use_new_address" value="1" checked>
+            <input class="form-check-input" type="checkbox" id="use-new-address" name="use_new_address" value="1" <%= current_user.customer && current_user.customer.addresses.any? ? '' : 'checked' %>>
             <label class="form-check-label" for="use-new-address">
               Enter shipping address
             </label>
           </div>
         </div>
         
-        <div id="new-address-form">
+        <div id="new-address-form" <%= current_user.customer && current_user.customer.addresses.any? ? 'style="display:none;"' : '' %>>
           <div class="mb-3">
             <label for="address-street" class="form-label">Street Address</label>
             <input type="text" class="form-control" id="address-street" name="address[street]">
@@ -50,47 +67,57 @@
   <% end %>
 </div>
 
+<style>
+  .separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 15px 0;
+  }
+  
+  .separator::before,
+  .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .separator span {
+    padding: 0 10px;
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const useNewAddressCheckbox = document.getElementById('use-new-address');
-  const addressSelect = document.getElementById('address-select');
   const newAddressForm = document.getElementById('new-address-form');
+  const addressRadios = document.querySelectorAll('input[name="address_id"]');
   
-  if (addressSelect && addressSelect.value && useNewAddressCheckbox && !useNewAddressCheckbox.checked) {
-    newAddressForm.style.display = 'none';
-  }
+  addressRadios.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      if (this.checked) {
+        useNewAddressCheckbox.checked = false;
+        newAddressForm.style.display = 'none';
+      }
+    });
+  });
   
   if (useNewAddressCheckbox) {
     useNewAddressCheckbox.addEventListener('change', function() {
       if (this.checked) {
-        if (addressSelect) {
-          addressSelect.value = '';
-          addressSelect.disabled = true;
-        }
+        addressRadios.forEach(function(radio) {
+          radio.checked = false;
+        });
         newAddressForm.style.display = 'block';
       } else {
-        if (addressSelect) {
-          addressSelect.disabled = false;
-        }
         newAddressForm.style.display = 'none';
+        if (addressRadios.length > 0 && !Array.from(addressRadios).some(r => r.checked)) {
+          addressRadios[0].checked = true;
+        }
       }
     });
-  }
-  
-  if (addressSelect) {
-    addressSelect.addEventListener('change', function() {
-      if (this.value) {
-        if (useNewAddressCheckbox) {
-          useNewAddressCheckbox.checked = false;
-        }
-        newAddressForm.style.display = 'none';
-      }
-    });
-    
-    if (addressSelect.value) {
-      const event = new Event('change');
-      addressSelect.dispatchEvent(event);
-    }
   }
 });
 </script>

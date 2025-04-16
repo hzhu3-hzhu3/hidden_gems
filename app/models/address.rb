@@ -1,6 +1,6 @@
 class Address < ApplicationRecord
   belongs_to :customer
-  belongs_to :province, optional: true
+  belongs_to :province
   
   validates :province_id, presence: true
   validates :street, :city, :postal_code, presence: true, if: -> { street.present? || city.present? || postal_code.present? }

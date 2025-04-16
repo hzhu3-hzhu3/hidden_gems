@@ -12,7 +12,7 @@ class AddressesController < ApplicationController
   
   def new
     @address = current_user.customer.addresses.build
-    @provinces = get_provinces_list
+    @provinces = Province.all
   end
   
   def create
@@ -21,20 +21,20 @@ class AddressesController < ApplicationController
     if @address.save
       redirect_to addresses_path, notice: "Address added successfully!"
     else
-      @provinces = get_provinces_list
+      @provinces = Province.all
       render :new, status: :unprocessable_entity
     end
   end
   
   def edit
-    @provinces = get_provinces_list
+    @provinces = Province.all
   end
   
   def update
     if @address.update(address_params)
       redirect_to addresses_path, notice: "Address updated successfully!"
     else
-      @provinces = get_provinces_list
+      @provinces = Province.all
       render :edit, status: :unprocessable_entity
     end
   end
@@ -57,24 +57,6 @@ class AddressesController < ApplicationController
   end
   
   def address_params
-    params.require(:address).permit(:street, :city, :province, :postal_code)
-  end
-  
-  def get_provinces_list
-    [
-      'Alberta',
-      'British Columbia',
-      'Manitoba',
-      'New Brunswick',
-      'Newfoundland and Labrador',
-      'Northwest Territories',
-      'Nova Scotia',
-      'Nunavut',
-      'Ontario',
-      'Prince Edward Island',
-      'Quebec',
-      'Saskatchewan',
-      'Yukon'
-    ]
+    params.require(:address).permit(:street, :city, :province_id, :postal_code)
   end
 end

@@ -26,6 +26,14 @@ class Order < ApplicationRecord
     total_gst + total_pst
   end
   
+  def self.gst_rate_for_province(province_id)
+    Province.find(province_id).gst_rate
+  end
+  
+  def self.pst_rate_for_province(province_id)
+    Province.find(province_id).pst_rate
+  end
+  
   def self.ransackable_attributes(auth_object = nil)
     ["address_id", "created_at", "customer_id", "id", "status", "gst_rate", "pst_rate", "total_price", "updated_at"]
   end
