@@ -1,5 +1,5 @@
 class PaymentsController < ApplicationController
-  include ActionView::Helpers::TextHelper  
+  include ActionView::Helpers::TextHelper
   
   before_action :authenticate_user!
   before_action :set_order
@@ -13,26 +13,33 @@ class PaymentsController < ApplicationController
       cancel_url: order_url(@order)
     )
 
+
     @order.update(stripe_session_id: @stripe_session.id)
 
     respond_to do |format|
-      format.js 
+      format.html { redirect_to @stripe_session.url }
+      format.js   
+      format.turbo_stream { redirect_to @stripe_session.url }
     end
   end
 
   def success
     if @order
-      stripe_session = Stripe::Checkout::Session.retrieve(@order.stripe_session_id)
-      payment_intent = Stripe::PaymentIntent.retrieve(stripe_session.payment_intent)
+      begin
+        stripe_session = Stripe::Checkout::Session.retrieve(@order.stripe_session_id)
+        payment_intent = Stripe::PaymentIntent.retrieve(stripe_session.payment_intent)
 
-      if payment_intent.status == 'succeeded'
-        @order.update(
-          status: :paid,
-          stripe_payment_id: payment_intent.id
-        )
-        flash[:notice] = "Payment successful! Your order has been processed."
-      else
-        flash[:alert] = "Payment was not successfully processed. Please try again or contact support."
+        if payment_intent.status == 'succeeded'
+          @order.update(
+            status: :paid,
+            stripe_payment_id: payment_intent.id
+          )
+          flash[:notice] = "Payment successful! Your order has been processed."
+        else
+          flash[:alert] = "Payment was not successfully processed. Please try again or contact support."
+        end
+      rescue => e
+        flash[:alert] = "Error retrieving payment information: #{e.message}"
       end
     else
       flash[:alert] = "Order not found. Please contact support if you believe this is an error."
