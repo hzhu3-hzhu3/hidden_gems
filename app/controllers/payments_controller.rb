@@ -15,11 +15,7 @@ class PaymentsController < ApplicationController
 
     @order.update(stripe_session_id: @stripe_session.id)
 
-    respond_to do |format|
-      format.html { redirect_to @stripe_session.url, allow_other_host: true }
-      format.js
-      format.turbo_stream { redirect_to @stripe_session.url, allow_other_host: true }
-    end
+    redirect_to @stripe_session.url, allow_other_host: true
   end
 
   def success
@@ -61,7 +57,7 @@ class PaymentsController < ApplicationController
             name: item.product.name,
             description: truncate(item.product.description, length: 100)
           },
-          unit_amount: (item.bought_price * 100).to_i, # Stripe uses cents
+          unit_amount: (item.bought_price * 100).to_i, 
         },
         quantity: item.quantity
       }

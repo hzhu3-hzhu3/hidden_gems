@@ -71,7 +71,7 @@
             <strong>Ready to complete your purchase?</strong> Click the button below to proceed to our secure payment page.
           </div>
           
-          <%= form_with url: create_payment_path(@order), method: :post do |f| %>
+          <%= form_with url: create_payment_path(@order), method: :post, data: { turbo: false } do |f| %>
             <%= f.submit "Proceed to Payment", class: "btn btn-success btn-lg" %>
           <% end %>
         </div>
