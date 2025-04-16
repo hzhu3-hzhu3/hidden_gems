@@ -10,6 +10,9 @@ class Order < ApplicationRecord
   validates :gst_rate, numericality: { greater_than_or_equal_to: 0 }
   validates :pst_rate, numericality: { greater_than_or_equal_to: 0 }
   
+  attribute :stripe_session_id, :string
+  attribute :stripe_payment_id, :string
+  
   def subtotal
     order_items.sum { |item| item.quantity * item.bought_price }
   end
@@ -35,7 +38,9 @@ class Order < ApplicationRecord
   end
   
   def self.ransackable_attributes(auth_object = nil)
-    ["address_id", "created_at", "customer_id", "id", "status", "gst_rate", "pst_rate", "total_price", "updated_at"]
+    ["address_id", "created_at", "customer_id", "id", "status", 
+     "gst_rate", "pst_rate", "total_price", "updated_at", 
+     "stripe_payment_id", "stripe_session_id"]
   end
   
   def self.ransackable_associations(auth_object = nil)
