@@ -13,13 +13,12 @@ class PaymentsController < ApplicationController
       cancel_url: order_url(@order)
     )
 
-
     @order.update(stripe_session_id: @stripe_session.id)
 
     respond_to do |format|
-      format.html { redirect_to @stripe_session.url }
-      format.js   
-      format.turbo_stream { redirect_to @stripe_session.url }
+      format.html { redirect_to @stripe_session.url, allow_other_host: true }
+      format.js
+      format.turbo_stream { redirect_to @stripe_session.url, allow_other_host: true }
     end
   end
 
