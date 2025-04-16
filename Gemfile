@@ -39,7 +39,7 @@ gem "thruster", require: false
 
 gem 'devise'
 gem 'kaminari'
-gem 'activeadmin', '3.2.5'
+gem 'activeadmin', '3.3.0'
 gem 'faker'
 gem 'dotenv-rails', groups: [:development, :test]
 
