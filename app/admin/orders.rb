@@ -12,16 +12,24 @@ ActiveAdmin.register Order do
     id_column
     column :customer
     column :status do |order|
-      status_tag order.status, 
-        class: order.status == 'paid' ? :ok : 
-               (order.status == 'pending' ? :warning : 
-                (order.status == 'shipped' ? :yes : :error))
+      status_tag order.status,
+        class: order.status == 'paid' ? :ok :
+        (order.status == 'pending' ? :warning :
+        (order.status == 'shipped' ? :yes : :error))
     end
     column :total_price do |order|
       number_to_currency(order.total_price)
     end
     column :created_at
     actions
+  end
+  
+  action_item :view_orders_details, only: :index do
+    link_to 'Order Details View', orders_details_admin_orders_path
+  end
+  
+  collection_action :orders_details, method: :get do
+    @orders = Order.includes(:customer, :order_items, :address, order_items: :product).order(created_at: :desc).page(params[:page]).per(10)
   end
   
   show do

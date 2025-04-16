@@ -1,0 +1,53 @@
+name: Docker Build
+
+on:
+  workflow_run:
+    workflows: ["Rails CI"]
+    types:
+      - completed
+    branches:
+      - main
+      - master
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build and test Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          tags: hidden-gems:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Generate Docker setup files
+        run: |
+          echo "# Docker Setup for Hidden Gems" > DOCKER_SETUP.md
+          echo "" >> DOCKER_SETUP.md
+          echo "## Build the Docker image" >> DOCKER_SETUP.md
+          echo "\`\`\`bash" >> DOCKER_SETUP.md
+          echo "docker build -t hidden-gems ." >> DOCKER_SETUP.md
+          echo "\`\`\`" >> DOCKER_SETUP.md
+          echo "" >> DOCKER_SETUP.md
+          echo "## Run the container locally" >> DOCKER_SETUP.md
+          echo "\`\`\`bash" >> DOCKER_SETUP.md
+          echo "docker run -p 3000:3000 -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/hidden_gems_development -e RAILS_MASTER_KEY=\`cat config/master.key\` hidden-gems" >> DOCKER_SETUP.md
+          echo "\`\`\`" >> DOCKER_SETUP.md
+          echo "" >> DOCKER_SETUP.md
+          echo "## Access the application" >> DOCKER_SETUP.md
+          echo "Open your browser and navigate to \`http://localhost:3000\`" >> DOCKER_SETUP.md
+      
+      - name: Upload Docker setup instructions
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-setup-instructions
+          path: DOCKER_SETUP.md
