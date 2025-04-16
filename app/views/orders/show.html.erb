@@ -30,15 +30,15 @@
           </thead>
           <tbody>
             <% @order.order_items.each do |item| %>
-              <tr>
-                <td><%= item.product.name %></td>
-                <td>$<%= sprintf("%.2f", item.bought_price) %></td>
-                <td><%= item.quantity %></td>
-                <td>$<%= sprintf("%.2f", item.subtotal) %></td>
-                <td>$<%= sprintf("%.2f", item.gst_amount) %></td>
-                <td>$<%= sprintf("%.2f", item.pst_amount) %></td>
-                <td>$<%= sprintf("%.2f", item.total) %></td>
-              </tr>
+            <tr>
+              <td><%= item.product.name %></td>
+              <td>$<%= sprintf("%.2f", item.bought_price) %></td>
+              <td><%= item.quantity %></td>
+              <td>$<%= sprintf("%.2f", item.subtotal) %></td>
+              <td>$<%= sprintf("%.2f", item.gst_amount) %></td>
+              <td>$<%= sprintf("%.2f", item.pst_amount) %></td>
+              <td>$<%= sprintf("%.2f", item.total) %></td>
+            </tr>
             <% end %>
           </tbody>
           <tfoot>
@@ -64,6 +64,24 @@
           </tfoot>
         </table>
       </div>
+      
+      <% if @order.status == 'pending' && !@order.stripe_payment_id.present? %>
+        <div class="mt-4">
+          <div class="alert alert-info">
+            <strong>Ready to complete your purchase?</strong> Click the button below to proceed to our secure payment page.
+          </div>
+          <%= form_with url: create_payment_path(@order), method: :post, data: { remote: true } do |f| %>
+            <%= f.submit "Proceed to Payment", class: "btn btn-success btn-lg" %>
+          <% end %>
+        </div>
+      <% elsif @order.stripe_payment_id.present? %>
+        <div class="mt-4">
+          <div class="alert alert-success">
+            <strong>Payment Complete!</strong> Thank you for your purchase.
+            <p class="mb-0 mt-2">Payment ID: <%= @order.stripe_payment_id %></p>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
   
