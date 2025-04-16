@@ -1,4 +1,6 @@
 class PaymentsController < ApplicationController
+  include ActionView::Helpers::TextHelper  
+  
   before_action :authenticate_user!
   before_action :set_order
 
