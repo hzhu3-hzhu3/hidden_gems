@@ -1,0 +1,18 @@
+<%= form_with url: add_price_admin_product_path(product), method: :post, class: "add-price-form" do |f| %>
+  <h4>Add New Price</h4>
+  <div style="display: flex; gap: 10px; align-items: flex-end;">
+    <div>
+      <%= f.label :price, "Price" %>
+      <%= f.number_field :price, name: "product_price[price]", step: "0.01", min: "0", required: true, style: "width: 120px;" %>
+    </div>
+    
+    <div>
+      <%= f.label :effective_date, "Effective Date" %>
+      <%= f.date_field :effective_date, name: "product_price[effective_date]", value: Date.today, required: true %>
+    </div>
+    
+    <div>
+      <%= f.submit "Add Price", class: "button" %>
+    </div>
+  </div>
+<% end %>
