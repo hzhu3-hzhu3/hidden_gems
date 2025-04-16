@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_customer, except: [:index, :show]
+  before_action :ensure_minimum_customer_info, except: [:index, :show]
   before_action :set_order, only: [:show]
   
   def index
@@ -14,15 +14,15 @@ class OrdersController < ApplicationController
   def show
     @order = current_user.customer.orders.find(params[:id])
   end
-
+  
   def new
     if session[:cart].blank? || session[:cart].empty?
       redirect_to cart_show_path, alert: "Your cart is empty"
       return
     end
     
-    @provinces = get_provinces_with_taxes
-    @addresses = current_user.customer.addresses
+    @provinces = Province.all
+    @addresses = current_user.customer.addresses if current_user.customer.present?
   end
   
   def review
@@ -30,17 +30,18 @@ class OrdersController < ApplicationController
       redirect_to cart_show_path, alert: "Your cart is empty"
       return
     end
-  
+    
     if params[:use_new_address] == "1"
-      if params[:address][:province].blank?
+      if params[:address][:province_id].blank?
         redirect_to new_order_path, alert: "Please select at least a province"
         return
       end
-  
-      @address = current_user.customer.addresses.build(
+      
+      province = Province.find(params[:address][:province_id])
+      @address = Address.new(
         street: params[:address][:street],
         city: params[:address][:city],
-        province: params[:address][:province],
+        province_id: params[:address][:province_id],
         postal_code: params[:address][:postal_code]
       )
       @new_address = true
@@ -51,25 +52,20 @@ class OrdersController < ApplicationController
       redirect_to new_order_path, alert: "Please select or enter a shipping address"
       return
     end
-  
-    calculate_cart_preview(@address.province)
-  
+    
+    calculate_cart_preview(@address.province_id)
+    
     session[:order_address] = {
       id: @new_address ? nil : @address.id,
       street: @address.street,
       city: @address.city,
-      province: @address.province,
+      province_id: @address.province_id,
       postal_code: @address.postal_code,
       new_address: @new_address
     }
   end
   
   def create
-    unless current_user.customer.present?
-      redirect_to new_customer_path, alert: "Please create your customer profile first"
-      return
-    end
-    
     if session[:cart].blank? || session[:cart].empty?
       redirect_to cart_show_path, alert: "Your cart is empty"
       return
@@ -82,11 +78,20 @@ class OrdersController < ApplicationController
     
     address_info = session[:order_address]
     
+    unless current_user.customer.present?
+      @customer = current_user.create_customer(
+        full_name: current_user.username,
+        email: current_user.email
+      )
+    else
+      @customer = current_user.customer
+    end
+    
     if address_info["new_address"] == true
-      @address = current_user.customer.addresses.create(
+      @address = @customer.addresses.create(
         street: address_info["street"],
         city: address_info["city"],
-        province: address_info["province"],
+        province_id: address_info["province_id"],
         postal_code: address_info["postal_code"]
       )
       
@@ -95,14 +100,14 @@ class OrdersController < ApplicationController
         return
       end
     else
-      @address = current_user.customer.addresses.find(address_info["id"])
+      @address = @customer.addresses.find(address_info["id"])
     end
     
-    @order = current_user.customer.orders.new
+    @order = @customer.orders.new
     @order.status = :pending
     @order.address = @address
     
-    set_tax_rates_for_province(@address.province)
+    set_tax_rates_for_province(@address.province_id)
     
     total_before_tax = 0
     
@@ -139,10 +144,8 @@ class OrdersController < ApplicationController
   
   private
   
-  def set_customer
-    unless current_user.customer.present?
-      redirect_to new_customer_path, alert: "Please create your customer profile first"
-    end
+  def ensure_minimum_customer_info
+
   end
   
   def set_order
@@ -150,7 +153,7 @@ class OrdersController < ApplicationController
   end
   
   def address_params
-    params.require(:address).permit(:id, :street, :city, :province, :postal_code)
+    params.require(:address).permit(:id, :street, :city, :province_id, :postal_code)
   end
   
   def set_tax_rates_for_province(province_id)
@@ -159,22 +162,12 @@ class OrdersController < ApplicationController
     @order.pst_rate = province.pst_rate
   end
   
-  def get_provinces_with_taxes
-    Province.all.map do |province|
-      { 
-        id: province.id,
-        name: province.name, 
-        gst: (province.gst_rate * 100).round(2),
-        pst: (province.pst_rate * 100).round(2)
-      }
-    end
-  end
-  
-  def calculate_cart_preview(province)
+  def calculate_cart_preview(province_id)
+    province = Province.find(province_id)
     @items = []
     @subtotal = 0
-    @gst_rate = Order.gst_rate_for_province(province)
-    @pst_rate = Order.pst_rate_for_province(province)
+    @gst_rate = province.gst_rate
+    @pst_rate = province.pst_rate
     
     session[:cart].each do |product_id, qty|
       product = Product.find_by(id: product_id)

@@ -9,7 +9,10 @@
 #   end
 require 'faker'
 
-
+OrderItem.delete_all
+Order.delete_all
+Address.delete_all
+Customer.delete_all
 User.delete_all
 AdminUser.delete_all
 ProductPrice.delete_all
