@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "payments/create"
+  get "payments/success"
   root to: 'products#index'
   
   devise_for :admin_users, ActiveAdmin::Devise.config
