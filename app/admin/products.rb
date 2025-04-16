@@ -67,6 +67,14 @@ ActiveAdmin.register Product do
           if product.photo.attached?
             div class: "product-image text-center" do
               image_tag url_for(product.photo), style: "max-width: 100%; max-height: 300px;"
+              div class: "image-actions", style: "margin-top: 10px;" do
+                span do
+                  link_to "View Full Size", url_for(product.photo), target: "_blank", class: "button"
+                end
+                span style: "margin-left: 10px;" do
+                  link_to "Replace Image", edit_admin_product_path(product, anchor: "product_photo_input"), class: "button"
+                end
+              end
             end
           else
             div class: "no-image text-center" do
@@ -111,8 +119,10 @@ ActiveAdmin.register Product do
     f.inputs "Product Details" do
       f.input :name
       f.input :description
-      f.input :photo, as: :file, hint: f.object.photo.attached? ? 
-        image_tag(url_for(f.object.photo.variant(:thumb)), style: "max-width: 100px; max-height: 100px;") : 
+      f.input :photo, as: :file, 
+      hint: f.object.photo.attached? ? 
+        (image_tag(url_for(f.object.photo.variant(:thumb)), style: "max-width: 200px; max-height: 200px;") + 
+        content_tag(:p, "Select a new image to replace the current one.")) : 
         content_tag(:span, "No image yet")
       f.input :categories, as: :check_boxes, collection: Category.all
     end
