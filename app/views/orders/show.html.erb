@@ -30,15 +30,15 @@
           </thead>
           <tbody>
             <% @order.order_items.each do |item| %>
-            <tr>
-              <td><%= item.product.name %></td>
-              <td>$<%= sprintf("%.2f", item.bought_price) %></td>
-              <td><%= item.quantity %></td>
-              <td>$<%= sprintf("%.2f", item.subtotal) %></td>
-              <td>$<%= sprintf("%.2f", item.gst_amount) %></td>
-              <td>$<%= sprintf("%.2f", item.pst_amount) %></td>
-              <td>$<%= sprintf("%.2f", item.total) %></td>
-            </tr>
+              <tr>
+                <td><%= item.product.name %></td>
+                <td>$<%= sprintf("%.2f", item.bought_price) %></td>
+                <td><%= item.quantity %></td>
+                <td>$<%= sprintf("%.2f", item.subtotal) %></td>
+                <td>$<%= sprintf("%.2f", item.gst_amount) %></td>
+                <td>$<%= sprintf("%.2f", item.pst_amount) %></td>
+                <td>$<%= sprintf("%.2f", item.total) %></td>
+              </tr>
             <% end %>
           </tbody>
           <tfoot>
