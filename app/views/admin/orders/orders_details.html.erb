@@ -1,0 +1,71 @@
+<% content_for :title do %>
+  Order Details
+<% end %>
+
+<div class="panel">
+  <h3>All Orders with Details</h3>
+  
+  <div class="panel_contents">
+    <div class="attributes_table">
+      <% @orders.each do |order| %>
+        <div class="order-details-card" style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
+          <h4>
+            Order #<%= order.id %> - 
+            <span style="<%= order.status == 'paid' ? 'color: green;' : (order.status == 'pending' ? 'color: orange;' : 'color: red;') %>">
+              <%= order.status.titleize %>
+            </span>
+          </h4>
+          
+          <div style="margin-bottom: 10px;">
+            <strong>Customer:</strong> <%= order.customer.full_name %> (<%= order.customer.email %>)<br>
+            <strong>Date:</strong> <%= order.created_at.strftime("%B %d, %Y at %I:%M %p") %><br>
+            <strong>Address:</strong> <%= order.address.full_address %><br>
+            <strong>Grand Total:</strong> <%= number_to_currency(order.total_price) %>
+          </div>
+          
+          <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f5f5f5;">
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>GST&HST (<%= (order.gst_rate * 100).round(2) %>%)</th>
+                <th>PST (<%= (order.pst_rate * 100).round(2) %>%)</th>
+                <th>Item Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% order.order_items.each do |item| %>
+                <tr>
+                  <td><%= item.product.name %></td>
+                  <td><%= item.quantity %></td>
+                  <td><%= number_to_currency(item.bought_price) %></td>
+                  <td><%= number_to_currency(item.subtotal) %></td>
+                  <td><%= number_to_currency(item.gst_amount) %></td>
+                  <td><%= number_to_currency(item.pst_amount) %></td>
+                  <td><%= number_to_currency(item.total) %></td>
+                </tr>
+              <% end %>
+              <tr style="background-color: #f5f5f5; font-weight: bold;">
+                <td colspan="3" style="text-align: right;">Totals:</td>
+                <td><%= number_to_currency(order.subtotal) %></td>
+                <td><%= number_to_currency(order.total_gst) %></td>
+                <td><%= number_to_currency(order.total_pst) %></td>
+                <td><%= number_to_currency(order.total_price) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="pagination_information">
+      <%= paginate @orders %>
+    </div>
+  </div>
+</div>
+
+<div class="links">
+  <%= link_to "Back to Orders List", admin_orders_path, class: "button" %>
+</div>
