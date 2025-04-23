@@ -10,7 +10,8 @@
 // Active Admin's got SASS!
 @import "active_admin/mixins";
 @import "active_admin/base";
-@import "bootstrap/scss/bootstrap";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
 
 // Overriding any non-variable Sass must be done after the fact.
@@ -19,6 +20,13 @@
 //   .status_tag { background: #6090DB; }
 
 // Custom styles for ActiveAdmin to match the frontend Bootstrap theme
+
+$primary: #d791a3;
+$secondary: #212529;
+$border-radius: .5rem;
+$body-bg: #f8f9fa;
+
+@import "bootstrap/scss/bootstrap";
 
 .active_admin .header {
   background-color: #d791a3;
