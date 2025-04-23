@@ -3,15 +3,14 @@ class CategoriesController < ApplicationController
 
   def index
     @categories = Category.all
+    add_breadcrumb "Categories" 
   end
 
   def show
     @category = Category.find(params[:id])
     @products = @category.products.includes(:product_prices).page(params[:page]).per(9)
-    @breadcrumbs = [
-      {name: "Home", path: root_path},
-      {name: @category.name, path: category_path(@category)}
-    ]
+    add_breadcrumb "Categories", categories_path
+    add_breadcrumb @category.name   
   end
 
   def new

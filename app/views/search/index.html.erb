@@ -1,18 +1,6 @@
 <% content_for :title, "Search Results" %>
 
 <div class="container my-4">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <% @breadcrumbs.each_with_index do |crumb, index| %>
-        <% if index == @breadcrumbs.size - 1 %>
-          <li class="breadcrumb-item active" aria-current="page"><%= crumb[:name] %></li>
-        <% else %>
-          <li class="breadcrumb-item"><%= link_to crumb[:name], crumb[:path] %></li>
-        <% end %>
-      <% end %>
-    </ol>
-  </nav>
-
   <div class="row mb-4">
     <div class="col-md-12">
       <h1>Search Results</h1>

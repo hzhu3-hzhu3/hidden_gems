@@ -20,10 +20,7 @@ class SearchController < ApplicationController
     
     @products = @products.page(params[:page]).per(9)
     
-    @breadcrumbs = [
-      {name: "Home", path: root_path},
-      {name: "Search Results", path: search_path(query: @query, category_id: @category_id)}
-    ]
+    add_breadcrumb "Search Results" 
 
     @categories = Category.all
   end

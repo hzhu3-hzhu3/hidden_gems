@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   # allow_browser versions: :modern
   
   protect_from_forgery with: :exception
+
   
   before_action :set_cart_count
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -21,4 +22,6 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
     devise_parameter_sanitizer.permit(:account_update, keys: [:username])
   end
+
+  add_breadcrumb "Home", :root_path
 end
