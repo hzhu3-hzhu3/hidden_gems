@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Admin Login</title>
+    <title>Admin Login | Hidden Gems</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-      <%= stylesheet_link_tag "active_admin", media: "all", "data-turbo-track": "reload" %>
-      <%= javascript_include_tag "active_admin", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= stylesheet_link_tag "active_admin", media: "all" %>
+    <%= stylesheet_link_tag "active_admin_custom", media: "all" %>
+
+    <%= javascript_include_tag "application" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="d-flex justify-content-center align-items-center" style="height: 100vh; background-color: #f8f9fa;">
+    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+      <h1 class="mb-4 text-center">Admin Sign In</h1>
+      <%= yield %>
+    </div>
   </body>
 </html>

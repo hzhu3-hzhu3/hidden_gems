@@ -1,5 +1,3 @@
-
-
 require_relative "boot"
 require "rails/all"
 
@@ -15,7 +13,10 @@ module HiddenGems
       Rails.root.join("lib/assets"),
       Rails.root.join("lib/tasks")
     )
+    config.assets.paths << Rails.root.join("app", "assets", "stylesheets")
+    config.assets.paths << Rails.root.join("app", "assets", "javascripts")
     config.assets.paths << Rails.root.join("app", "assets", "builds")
+  
 
   end
 end

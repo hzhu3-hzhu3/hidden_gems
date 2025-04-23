@@ -110,23 +110,23 @@ ActiveAdmin.register Order do
             end
           end
           
-          div class: "order-totals", style: "margin-top: 15px; text-align: right;" do
+          div class: 'order-totals', style: 'margin-top: 15px; text-align: right;' do
             div do
-              span "Subtotal: ", style: "font-weight: bold;"
+              span 'Subtotal: ',    style: 'font-weight: bold;'
               span number_to_currency(order.subtotal)
             end
             div do
-              span "GST/HST: ", style: "font-weight: bold;"
+              span 'GST/HST: ',     style: 'font-weight: bold;'
               span number_to_currency(order.total_gst)
             end
             div do
-              span "PST: ", style: "font-weight: bold;"
+              span 'PST: ',         style: 'font-weight: bold;'
               span number_to_currency(order.total_pst)
             end
-            div style: "font-size: 1.2em; margin-top:
-                        div style: "font-size: 1.2em; margin-top: 5px;" do
-              span "Total: ", style: "font-weight: bold;"
-              span number_to_currency(order.total_price), style: "color: #198754; font-weight: bold;"
+            div style: 'font-size: 1.2em; margin-top: 5px;' do
+              span 'Total: ',       style: 'font-weight: bold;'
+              span number_to_currency(order.total_price),
+                   style: 'color: #198754; font-weight: bold;'
             end
           end
         end
@@ -166,7 +166,6 @@ ActiveAdmin.register Order do
     end
   end
   
-  # New and Edit forms
   form do |f|
     f.semantic_errors
     

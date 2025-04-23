@@ -7,3 +7,6 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin "bootstrap", to: "bootstrap.min.js"
 pin "@popperjs/core", to: "popper.min.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
+
+
+pin "active_admin", to: "active_admin.js"

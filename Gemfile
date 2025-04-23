@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
+gem 'sass-embedded', '~> 1.68'  
+
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -42,7 +44,7 @@ gem 'kaminari'
 gem 'activeadmin', '3.2.5'
 gem 'faker'
 gem 'dotenv-rails', groups: [:development, :test]
-
+gem "dartsass-rails", groups: [:development, :test]
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
  gem "image_processing", "~> 1.2"
 

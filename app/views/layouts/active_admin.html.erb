@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= content_for?(:title) ? yield(:title) : "Admin - Hidden Gems" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "active_admin", media: "all" %>
+  <%= stylesheet_link_tag "active_admin_custom", media: "all" %>
+  <%= stylesheet_link_tag "active_admin_override", media: "all" %>
+  <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
+
+  <!-- 内联样式，确保最高优先级 -->
+  <style>
+    #header {
+      background-color: #d791a3 !important;
+      color: #fff !important;
+      padding: 1rem !important;
+    }
+    
+    #header h1.site_title {
+      color: #fff !important;
+    }
+    
+    .button, .action_item a, input[type="submit"] {
+      background-color: #d791a3 !important;
+      color: white !important;
+    }
+  </style>
+
+  <%= javascript_importmap_tags %>
+  <%= javascript_include_tag "active_admin" %>
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+</head>
+
+<body>
+  <%= yield %>
+</body>
+</html>

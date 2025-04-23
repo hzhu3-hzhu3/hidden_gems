@@ -229,11 +229,15 @@ ActiveAdmin.setup do |config|
   #
   # You can provide an options hash for more control, which is passed along to stylesheet_link_tag():
   #   config.register_stylesheet 'my_print_stylesheet.css', media: :print
-  config.register_stylesheet 'active_admin_custom'
-  config.register_stylesheet 'active_admin'
-  config.register_stylesheet "https://cdn.quilljs.com/1.3.7/quill.snow.css"
-  config.register_javascript 'active_admin'
-  config.register_javascript "https://cdn.quilljs.com/1.3.7/quill.min.js"
+  # config.clear_stylesheets!
+  # config.register_stylesheet 'active_admin.css'
+  # config.register_stylesheet 'active_admin_custom.css'
+  # config.register_stylesheet 'active_admin_override.css'
+  # config.register_stylesheet "https://cdn.quilljs.com/1.3.7/quill.snow.css"
+    
+#  config.clear_javascripts! 
+ config.register_javascript 'active_admin.js'
+ config.register_javascript "https://cdn.quilljs.com/1.3.7/quill.min.js"
   #
   # To load a javascript file:
   #   config.register_javascript 'my_javascript.js'
@@ -350,9 +354,10 @@ ActiveAdmin.setup do |config|
 
   # == Webpacker
   #
-  # By default, Active Admin uses Sprocket's asset pipeline.
+  # By default, Active Admin uses ket's asset pipeline.
   # You can switch to using Webpacker here.
   #
   # config.javascript_in_head = true
-  # config.use_webpacker = true
+  config.use_webpacker = false
+  require_relative '../../lib/active_admin/views/header_renderer'
 end

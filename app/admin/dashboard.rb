@@ -1,6 +1,6 @@
 ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
-
+  
   content title: proc { I18n.t("active_admin.dashboard") } do
     columns do
       column do
@@ -9,32 +9,32 @@ ActiveAdmin.register_page "Dashboard" do
             h2 "Store Management Dashboard"
             para "Welcome to the admin panel for Hidden Gems e-commerce platform. Use the navigation menu to manage your products, orders, and more."
             
-            div class: "stats-container", style: "display: flex; gap: 1rem; margin-top: 1rem;" do
-              div class: "stat-box", style: "flex: 1; padding: 1rem; background-color: #e9f2ff; border-radius: 0.375rem;" do
-                h3 "#{Product.count}", style: "font-size: 2rem; margin: 0; color: #0d6efd;"
-                para "Products", style: "margin: 0;"
+            div class: "stats-container" do
+              div class: "stat-box" do
+                h3 "#{Product.count}"
+                para "Products"
               end
               
-              div class: "stat-box", style: "flex: 1; padding: 1rem; background-color: #fff4e6; border-radius: 0.375rem;" do
-                h3 "#{Order.count}", style: "font-size: 2rem; margin: 0; color: #fd7e14;"
-                para "Orders", style: "margin: 0;"
+              div class: "stat-box" do
+                h3 "#{Order.count}"
+                para "Orders"
               end
               
-              div class: "stat-box", style: "flex: 1; padding: 1rem; background-color: #e6f9f4; border-radius: 0.375rem;" do
-                h3 "#{Customer.count}", style: "font-size: 2rem; margin: 0; color: #20c997;"
-                para "Customers", style: "margin: 0;"
+              div class: "stat-box" do
+                h3 "#{Customer.count}"
+                para "Customers"
               end
               
-              div class: "stat-box", style: "flex: 1; padding: 1rem; background-color: #f5f0ff; border-radius: 0.375rem;" do
-                h3 "#{Category.count}", style: "font-size: 2rem; margin: 0; color: #6f42c1;"
-                para "Categories", style: "margin: 0;"
+              div class: "stat-box" do
+                h3 "#{Category.count}"
+                para "Categories"
               end
             end
           end
         end
       end
     end
-
+    
     columns do
       column do
         panel "Recent Orders" do
@@ -48,9 +48,9 @@ ActiveAdmin.register_page "Dashboard" do
             end
             column :status do |order|
               status_tag order.status,
-                class: order.status == 'paid' ? :ok :
-                       (order.status == 'pending' ? :warning :
-                       (order.status == 'shipped' ? :yes : :error))
+              class: order.status == 'paid' ? :ok :
+                   (order.status == 'pending' ? :warning :
+                   (order.status == 'shipped' ? :yes : :error))
             end
             column :created_at
           end
@@ -75,7 +75,7 @@ ActiveAdmin.register_page "Dashboard" do
         panel "Recently Updated Products" do
           ul class: "product-list" do
             Product.where("updated_at > created_at AND updated_at >= ?", 3.days.ago).limit(8).map do |product|
-              li class: "product-item", style: "margin-bottom: 0.5rem;" do
+              li class: "product-item" do
                 span do
                   status_tag "updated", class: "ok"
                 end
