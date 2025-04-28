@@ -98,7 +98,8 @@ GEM
       msgpack (~> 1.2)
     brakeman (7.0.2)
       racc
-    breadcrumbs_on_rails (3.0.1)
+    breadcrumbs_on_rails (4.1.0)
+      railties (>= 5.0)
     builder (3.3.0)
     capybara (3.40.0)
       addressable
@@ -420,7 +421,7 @@ DEPENDENCIES
   activeadmin (= 3.2.5)
   bootsnap
   brakeman
-  breadcrumbs_on_rails (~> 3.0)
+  breadcrumbs_on_rails (~> 4.1)
   capybara
   dartsass-rails
   debug
