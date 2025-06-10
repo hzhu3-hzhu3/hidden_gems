@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
-gem 'sass-embedded', '~> 1.68'  
+gem 'sass-embedded', '~> 1.89'  
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
